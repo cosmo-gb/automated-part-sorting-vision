@@ -1,31 +1,33 @@
-# Technical Test - Vision Engineer
+# Test technique – Ingénieur Vision
 
-## 1. Client analysis
+## Introduction
 
-...
+## 1. Analyse du besoin
 
-## 2. Questions / assumptions
+## 2. Points à clarifier et hypothèses
 
-...
+## 3. Risques techniques
 
-## 3. Technical risks
+## 4. Proposition d'architecture
 
-...
+### 4.1 Architecture matérielle
 
-## 4. Proposed architecture
+### 4.2 Pipeline de traitement d'image
 
-...
+### 4.3 Estimation de la pose
 
-## 5. Robot interface
+### 4.4 Calibration
 
-...
+### 4.5 Communication avec le robot
 
-## 6. Camera / lighting / calibration
+## 5. Format des données transmises
 
-...
+## 6. Stratégie de validation
 
-## 7. Validation strategy
+## 7. Bonus : évolution vers des pièces plus variées
 
-...
+## Annexes
 
-## 8. Pseudo-code
+- Schéma d'architecture
+- Pseudo-code
+- Exemple de message envoyé au robot
