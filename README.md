@@ -33,13 +33,6 @@ Les principales exigences identifiées sont les suivantes :
 Ces contraintes conduisent à privilégier une solution robuste vis-à-vis des variations d'éclairage, reposant sur une calibration métrique rigoureuse et une synchronisation avec le convoyeur. La précision demandée devra être considérée comme une exigence portant sur l'ensemble du système (vision, calibration, convoyeur et robot), et non uniquement sur l'algorithme de traitement d'image.
 
 
-## 2. Points à clarifier et hypothèses
-
-* Quelle est exactement la règle de tri : toutes les pièces doivent-elles être saisies, certaines doivent-elles être ignorées, ou chaque catégorie doit-elle être dirigée vers une destination différente ?
-* Une référence produit correspond-elle à une couleur, à une géométrie, ou à une combinaison de plusieurs caractéristiques ?
-* L’orientation de la pièce est-elle nécessaire à la préhension, ou une position 2D suffit-elle ?
-
-
 ## 2 Hypothèses
 
 La proposition repose sur les hypothèses suivantes:
