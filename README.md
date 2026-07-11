@@ -44,6 +44,7 @@ Sans ces informations, la faisabilité de la précision, la robustesse de la dé
 La proposition repose sur les hypothèses suivantes:
 
 * les pièces sont rigides et reposent à plat sur le convoyeur ;
+* la précision de ±0,1 mm est attendue sur l'erreur finale de préhension ;
 * les pièces sont bien séparées et ne se chevauchent pas ;
 * chaque pièce visible peut être traitée comme une instance indépendante ;
 * les références actuelles présentent une géométrie connue et stable ;
