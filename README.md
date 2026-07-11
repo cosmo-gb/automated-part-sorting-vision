@@ -175,16 +175,32 @@ Les informations issues du traitement d'image sont regroupées dans un format de
 
 ## 6. Stratégie de validation
 
+La validation doit être réalisée progressivement, d’abord sur chaque fonction du système, puis sur la chaîne complète jusqu’à la préhension robotique.
+
+Un jeu de test représentatif sera constitué avec plusieurs pièces rouges et bleues, différentes orientations et positions dans le champ de vision, ainsi que des variations contrôlées d’éclairage, de vitesse du convoyeur et de reflets. Des cas dégradés seront également inclus : pièce partiellement visible, contraste faible, orientation ambiguë ou détection incertaine.
+
+Les performances suivantes seront mesurées :
+
+* taux de détection et de classification correcte ;
+* erreur de position et d’orientation dans le repère robot ;
+* répétabilité des mesures pour une même pièce ;
+* robustesse aux variations d’éclairage et aux reflets ;
+* temps de traitement et compatibilité avec la cadence du convoyeur ;
+* taux de réussite de préhension.
+
+La validation sera réalisée en deux étapes : une validation du système de vision, convoyeur à l'arrêt, afin de vérifier la précision de localisation et de calibration, puis une validation sur la cellule complète en fonctionnement, en mesurant le taux de réussite de la préhension et la précision globale du système sur un ensemble représentatif de pièces.
+
+Enfin, un test d’endurance sera réalisé sur une série suffisamment longue de pièces afin d’identifier les erreurs intermittentes, les dérives de calibration et les problèmes de synchronisation. Les seuils d’acceptation devront être définis avec le client avant la validation finale.
+
 ## 7. Bonus : évolution vers des pièces plus variées
 
-## Annexes
+Avec des formes plus variables et des couleurs moins discriminantes, une segmentation et une classification reposant principalement sur des seuils colorimétriques deviendraient moins fiables. L’approche devrait davantage exploiter la géométrie, la texture et l’apparence globale des pièces.
 
-- Schéma d'architecture
-- Pseudo-code
-- Exemple de message envoyé au robot
+Selon le niveau de variabilité, on pourrait utiliser un matching géométrique plus avancé ou un modèle d’apprentissage supervisé pour détecter et classifier les pièces. Cela nécessiterait un jeu de données représentatif, comprenant les différentes références, orientations, conditions d’éclairage et défauts possibles.
 
+L’estimation de pose resterait une étape distincte afin de fournir au robot une position précise et exploitable. Le changement de référence passerait alors davantage par l’ajout de nouvelles données et la mise à jour du modèle que par la simple modification de seuils ou de paramètres de configuration.
 
-## 2. Points à clarifier
+## Annexes - Points à clarifier
 
 #### Règle de tri et références produit
 
