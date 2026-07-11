@@ -178,7 +178,26 @@ Les étapes sont les suivantes :
 
 ## Format des données transmises
 
-Les informations issues du traitement d'image sont regroupées dans un format de données unique transmis au robot. Chaque pièce détectée est décrite par sa référence, sa pose, les informations de synchronisation avec le convoyeur et les indicateurs nécessaires à la validation de la détection. Le choix du format de sérialisation (JSON, Protobuf, etc.) dépendra du protocole de communication retenu. Un exemple de message transmis au robot est disponible dans [`docs/example_robot_message.json`](docs/example_robot_message.json).
+Les informations issues du traitement d'image sont regroupées dans un format de données unique transmis au robot. Chaque pièce détectée est décrite par sa référence, sa pose, les informations de synchronisation avec le convoyeur et les indicateurs nécessaires à la validation de la détection. Le choix du format de sérialisation (JSON, Protobuf, etc.) dépendra du protocole de communication retenu. 
+
+'''json
+{
+    "timestamp": 1712345678,
+    "conveyor_position": 1523.8,
+    "detections": [
+        {
+            "id": 42,
+            "class": "red_part",
+            "x_mm": 215.43,
+            "y_mm": 87.16,
+            "theta_deg": 32.4,
+            "confidence": 0.98
+        }
+    ]
+}
+'''
+
+Un exemple de message transmis au robot est disponible dans [`docs/example_robot_message.json`](docs/example_robot_message.json).
 
 ## Stratégie de validation
 
