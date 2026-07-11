@@ -178,6 +178,28 @@ Les étapes sont les suivantes :
 
 ## Format des données transmises
 
+
+## Format des données transmises
+
+Chaque pièce détectée est décrite par sa référence, sa pose, sa position encodeur et un score de confiance. Par exemple :
+
+```json
+{
+  "id": 42,
+  "reference": "piece_rouge",
+  "pose": {
+    "x_mm": 125.4,
+    "y_mm": 83.7,
+    "theta_deg": 32.1
+  },
+  "encoder_position": 184520,
+  "confidence": 0.97,
+  "status": "valid"
+}
+```
+
+Le protocole et le format de sérialisation définitifs dépendront de l’interface disponible côté robot.
+
 Les informations issues du traitement d'image sont regroupées dans un format de données unique transmis au robot. Chaque pièce détectée est décrite par sa référence, sa pose, les informations de synchronisation avec le convoyeur et les indicateurs nécessaires à la validation de la détection. Le choix du format de sérialisation (JSON, Protobuf, etc.) dépendra du protocole de communication retenu. 
 
 '''json
