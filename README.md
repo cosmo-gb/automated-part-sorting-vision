@@ -82,28 +82,30 @@ Les principaux composants sont les suivants :
 * un ordinateur industriel assurant le traitement des images et la communication avec le robot ;
 * le robot de préhension.
 
-L'architecture fonctionnelle est illustrée ci-dessous.
+L'architecture fonctionnelle est illustrée ci-dessous:
 
-```text
+'''text
+
                  Convoyeur
                      │
           ┌──────────┴──────────┐
           │                     │
       Encodeur              Pièces
           │                     │
+          │              Caméra + éclairage
+          │                     │
           └──────────┬──────────┘
-                     │
-               Déclenchement
+                     ▼
+              Acquisition image
+          + lecture position encodeur
                      │
                      ▼
-         Caméra + Éclairage LED
+              Traitement d’image
+       classification + estimation de pose
                      │
                      ▼
-         Traitement d'image
-                     │
-                     ▼
-       Calibration et estimation
-              de la pose
+       Application de la calibration
+        pixels → repère convoyeur/robot
                      │
                      ▼
       Compensation du déplacement
@@ -111,8 +113,7 @@ L'architecture fonctionnelle est illustrée ci-dessous.
                      │
                      ▼
           Communication robot
-```
-
+'''
 
 ### 4.2 Pipeline de traitement d'image
 
