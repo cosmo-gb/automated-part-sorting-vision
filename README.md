@@ -41,10 +41,10 @@ Sans ces informations, la faisabilité de la précision, la robustesse de la dé
 
 ## Hypothèses
 
-La proposition repose sur les hypothèses suivantes:
+La proposition repose sur les hypothèses suivantes :
 
 * les pièces sont rigides et reposent à plat sur le convoyeur ;
-* Pour dimensionner une architecture conservatrice, l’exigence de ±0,1 mm est provisoirement considérée comme une exigence sur la chaîne complète. Cette interprétation devra être validée avec le client, car elle implique la vision, la synchronisation, la calibration et le robot.
+* pour dimensionner une architecture conservatrice, l’exigence de ±0,1 mm est provisoirement considérée comme une exigence sur la chaîne complète. Cette interprétation devra être validée avec le client, car elle implique la vision, la synchronisation, la calibration et le robot.
 * les pièces sont bien séparées et ne se chevauchent pas ;
 * chaque pièce visible peut être traitée comme une instance indépendante ;
 * les références actuelles présentent une géométrie connue et stable ;
@@ -191,6 +191,7 @@ Chaque pièce détectée est décrite par sa référence, sa pose, sa position e
   "encoder_position": 184520,
   "timestamp": 1712345678,
   "confidence": 0.97,
+  "frame": "conveyor",
   "status": "valid"
 }
 ```
