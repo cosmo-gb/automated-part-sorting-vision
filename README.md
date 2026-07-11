@@ -52,22 +52,9 @@ La proposition repose sur les hypothèses suivantes:
 * le changement de référence est réalisé par chargement d’une configuration contenant les paramètres de classification, le modèle géométrique et le point de préhension.
 
 
-## 3. Risques techniques
+## 3. Proposition d'architecture
 
-* Précision insuffisante : l’objectif de ±0,1 mm peut être incompatible avec le champ de vision, la résolution, l’optique, la calibration ou la répétabilité du robot.
-* Flou de mouvement : le déplacement continu du convoyeur peut dégrader le contour et donc l’estimation de la pose.
-* Synchronisation imparfaite : une erreur entre l’instant d’acquisition et la prise robot peut produire un décalage important.
-* Variations d’éclairage : la lumière ambiante peut modifier l’apparence des couleurs et perturber la segmentation.
-* Reflets sur les pièces brillantes : ils peuvent créer des zones saturées, masquer le contour ou fausser la classification.
-* Erreur liée à la hauteur des pièces : une calibration 2D unique devient inexacte si les surfaces observées ne sont pas dans le même plan.
-* Instabilité mécanique : vibrations ou déplacement de la caméra peuvent invalider la calibration.
-* Ambiguïté de forme : certaines géométries peuvent rendre l’orientation difficile ou indéterminée.
-* Changement de référence mal maîtrisé : une nouvelle géométrie, couleur ou hauteur peut nécessiter une nouvelle configuration ou calibration.
-* Détection non fiable transmise au robot : une mauvaise classification ou une pose erronée peut entraîner une prise incorrecte.
-
-## 4. Proposition d'architecture
-
-### 4.1 Architecture matérielle
+### 3.1 Architecture matérielle
 
 L'architecture proposée repose sur une caméra RGB fixe placée au-dessus du convoyeur, associée à un éclairage dédié afin de limiter l'influence des variations de lumière ambiante.
 
@@ -101,7 +88,15 @@ L'architecture fonctionnelle est illustrée ci-dessous:
                      │
                      ▼
               Traitement d’image
-       classification + estimation de pose
+                     │
+                     ▼
+              Segmentation des pièces
+                     │
+                     ▼
+              Classification des pièces
+                     │
+                     ▼
+              estimation de pose des pièces
                      │
                      ▼
        Application de la calibration
@@ -117,15 +112,66 @@ L'architecture fonctionnelle est illustrée ci-dessous:
 La calibration est réalisée lors de l’installation du système, puis ses paramètres sont appliqués à chaque détection.
 
 
-### 4.2 Pipeline de traitement d'image
+### 3.2 Pipeline de traitement d'image
 
-### 4.3 Estimation de la pose
+Le traitement proposé repose sur une approche déterministe, adaptée à un environnement contrôlé et à des pièces de géométrie connue.
 
-### 4.4 Calibration
+Les étapes sont les suivantes :
 
-### 4.5 Communication avec le robot
+1. **Acquisition de l'image**
+
+   Une image RGB est acquise à l'aide d'une caméra industrielle. Les paramètres d'acquisition (temps d'exposition, gain, balance des blancs) sont fixés afin de garantir des conditions d'observation reproductibles.
+
+2. **Prétraitement**
+
+   L'image est corrigée à l'aide des paramètres de calibration de la caméra (correction de la distorsion optique). 
+
+3. **Segmentation des pièces**
+
+   Les pièces sont segmentées par rapport au convoyeur afin d'extraire chaque objet individuellement. Pour ce faire on applique des seuils pour créer un masque binaire (pièce vs background). Astuce: une image du convoyeur à vide pourra être utilisée comme comparaison.
+   
+  voir pseudo_code/pipeline.py pour plus de détails.
+
+
+4. **Classification des pièces**
+
+   Les pièces extraites sont classifiées à partir de caractéristiques colorimétriques et géométriques. Si le nombre de références ou la complexité des formes rend cette approche insuffisante, un modèle de classification supervisée pourra être envisagé, sous réserve de disposer d’un jeu de données annoté représentatif et de respecter les contraintes de cadence. L’estimation précise de la pose restera traitée séparément.
+   
+  voir pseudo_code/pipeline.py pour plus de détails.
+
+5. **Estimation de la pose des pièces**
+
+   Pour chaque pièce isolée, le contour est extrait afin d’estimer sa géométrie. Selon la référence, le centroïde, les dimensions et une orientation principale peuvent être calculés directement. Pour une forme complexe ou lorsque ces descripteurs sont insuffisants, un matching géométrique avec un modèle de référence peut être utilisé afin d’estimer la translation et la rotation de la pièce, ainsi qu’un score de correspondance. Les éventuelles symétries doivent être prises en compte pour définir l’orientation réellement utile au robot.
+   À ce stade, la pose est connue dans le repère image, puis convertie dans le repère convoyeur ou robot à l’aide des paramètres de calibration.
+
+   voir pseudo_code/pipeline.py pour plus de détails.
+
+6. **Compensation du déplacement**
+
+   La position de la pièce est mise à jour à partir des informations fournies par l'encodeur du convoyeur afin de tenir compte du déplacement entre l'acquisition de l'image et la préhension.
+
+7. **Transmission au robot**
+
+   La catégorie de la pièce, sa pose et les informations nécessaires à la synchronisation sont transmises au robot.
+
+
+## 4. Risques techniques
+
+* Précision insuffisante : l’objectif de ±0,1 mm peut être incompatible avec le champ de vision, la résolution, l’optique, la calibration ou la répétabilité du robot.
+* Flou de mouvement : le déplacement continu du convoyeur peut dégrader le contour et donc l’estimation de la pose.
+* Synchronisation imparfaite : une erreur entre l’instant d’acquisition et la prise robot peut produire un décalage important.
+* Variations d’éclairage : la lumière ambiante peut modifier l’apparence des couleurs et perturber la segmentation.
+* Reflets sur les pièces brillantes : ils peuvent créer des zones saturées, masquer le contour ou fausser la classification.
+* Erreur liée à la hauteur des pièces : une calibration 2D unique devient inexacte si les surfaces observées ne sont pas dans le même plan.
+* Instabilité mécanique : vibrations ou déplacement de la caméra peuvent invalider la calibration.
+* Ambiguïté de forme : certaines géométries peuvent rendre l’orientation difficile ou indéterminée.
+* Changement de référence mal maîtrisé : une nouvelle géométrie, couleur ou hauteur peut nécessiter une nouvelle configuration ou calibration.
+* Détection non fiable transmise au robot : une mauvaise classification ou une pose erronée peut entraîner une prise incorrecte.
+
 
 ## 5. Format des données transmises
+
+Les informations issues du traitement d'image sont regroupées dans un format de données unique transmis au robot. Chaque pièce détectée est décrite par sa référence, sa pose, les informations de synchronisation avec le convoyeur et les indicateurs nécessaires à la validation de la détection. Le choix du format de sérialisation (JSON, Protobuf, etc.) dépendra du protocole de communication retenu. Un exemple de message transmis au robot est disponible dans [`docs/example_robot_message.json`](docs/example_robot_message.json).
 
 ## 6. Stratégie de validation
 

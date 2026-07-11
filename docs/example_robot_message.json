@@ -1,0 +1,14 @@
+{
+    "timestamp": 1712345678,
+    "conveyor_position": 1523.8,
+    "detections": [
+        {
+            "id": 42,
+            "class": "red_part",
+            "x_mm": 215.43,
+            "y_mm": 87.16,
+            "theta_deg": 32.4,
+            "confidence": 0.98
+        }
+    ]
+}

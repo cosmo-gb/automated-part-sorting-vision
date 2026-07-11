@@ -2,6 +2,18 @@ image = acquire()
 
 image = undistort(image)
 
+# segmentation from background
+
+image_lab = convert_to_lab(image)
+
+# consider a comparison with empty conveyor
+mask = threshold_difference_from_background(image_lab)
+
+mask = morphological_opening(mask)
+mask = morphological_closing(mask)
+
+objects = connected_components(mask)
+
 mask = segment_colour(image)
 
 objects = extract_objects(mask)
