@@ -76,7 +76,7 @@ Le convoyeur étant en mouvement continu, le système est synchronisé avec celu
 Les principaux composants sont les suivants :
 
 * une caméra industrielle RGB à obturateur global ;
-* un objectif adapté au champ de vision et à la précision recherchée ;
+* un objectif adapté au champ de vision et à la précision recherchée (pour une précision de 0.1mm, 1 pixel doit typiquement correspondre à 0.05mm ou moins);
 * un éclairage LED diffus, avec possibilité d'un fonctionnement stroboscopique si les essais mettent en évidence un flou de mouvement significatif ;
 * un encodeur convoyeur permettant de suivre le déplacement des pièces entre l'acquisition et la préhension ;
 * un ordinateur industriel assurant le traitement des images et la communication avec le robot ;
