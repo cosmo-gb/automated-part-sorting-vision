@@ -2,6 +2,10 @@
 
 ## Introduction
 
+L'objectif de ce projet est de concevoir un système de vision permettant de détecter des pièces plastiques rouges et bleues sur un convoyeur, de permettre leur préhension par un robot, puis de transmettre les informations nécessaires au robot avec la précision requise.
+
+Ce document présente une première proposition d'architecture, les hypothèses retenues, les principaux risques techniques ainsi qu'une stratégie de validation adaptée au besoin.
+
 ## 1. Analyse du besoin
 
 ## 2. Points à clarifier et hypothèses
