@@ -69,11 +69,14 @@ Le convoyeur étant en mouvement continu, le système est synchronisé avec celu
 Les principaux composants sont les suivants :
 
 * une caméra industrielle RGB à obturateur global ;
-* un objectif adapté au champ de vision et à la précision recherchée, avec un objectif initial d’échantillonnage au plan objet de l’ordre de 0,05 mm/pixel ou meilleur, à confirmer par un budget d’erreur complet (calibration, synchronisation et répétabilité du robot) ;
-* un éclairage LED diffus, avec possibilité d'un fonctionnement stroboscopique si les essais mettent en évidence un flou de mouvement significatif, une polarisation croisée pourra être évaluée pour limiter les reflets sur les pièces brillantes ;
-* un encodeur convoyeur permettant de suivre le déplacement des pièces entre l'acquisition et la préhension ;
+* un objectif adapté au champ de vision et à la précision recherchée, avec un échantillonnage initial visé de l’ordre de 0,05 mm/pixel ou meilleur au plan objet, à confirmer par un budget d’erreur complet ;
+* un éclairage LED diffus, éventuellement stroboscopique si les essais mettent en évidence un flou de mouvement significatif ;
+* un système de polarisation croisée, à évaluer pour limiter les reflets sur les pièces brillantes ;
+* un capotage opaque autour de la zone d’acquisition afin de limiter l’influence de la lumière ambiante et de garantir des conditions d’éclairage reproductibles ;
+* un encodeur de convoyeur permettant de suivre le déplacement des pièces entre l’acquisition et la préhension ;
 * un ordinateur industriel assurant le traitement des images et la communication avec le robot ;
 * le robot de préhension.
+
 
 L'architecture fonctionnelle est illustrée ci-dessous:
 
