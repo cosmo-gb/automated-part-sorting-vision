@@ -49,7 +49,7 @@ La proposition repose sur les hypothèses suivantes :
 * chaque pièce visible peut être traitée comme une instance indépendante ;
 * les références actuelles présentent une géométrie connue et stable ;
 * la couleur rouge ou bleue constitue un critère utile à la classification, sans être considérée comme nécessairement suffisante à elle seule ;
-* le robot doit recevoir une pose 2D \((x, y, \theta)\) ;
+* le robot doit recevoir une pose 2D (x, y, $\theta$) ;
 * le point de préhension est défini pour chaque référence dans un repère local associé à la pièce ;
 * la hauteur des pièces varie suffisamment peu pour permettre une calibration sur le plan du convoyeur ;
 * la caméra est montée de manière fixe et rigide au-dessus du convoyeur ;
