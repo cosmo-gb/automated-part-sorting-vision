@@ -17,3 +17,6 @@ The proposed solution prioritizes robustness and ease of maintenance, ensuring t
 
 ## Original Technical Brief
 Full specifications provided by the client: [Test technique Vision.pdf](./Test%20technique%20Vision.pdf)
+
+test
+
