@@ -84,7 +84,7 @@ Les principaux composants sont les suivants :
 
 L'architecture fonctionnelle est illustrée ci-dessous:
 
-'''text
+
 
                  Convoyeur
                      │
@@ -113,7 +113,9 @@ L'architecture fonctionnelle est illustrée ci-dessous:
                      │
                      ▼
           Communication robot
-'''
+
+La calibration est réalisée lors de l’installation du système, puis ses paramètres sont appliqués à chaque détection.
+
 
 ### 4.2 Pipeline de traitement d'image
 
