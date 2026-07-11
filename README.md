@@ -2,38 +2,44 @@
 
 ## Introduction
 
-L'objectif de ce projet est de concevoir un système de vision permettant de détecter des pièces plastiques rouges et bleues sur un convoyeur, de permettre leur préhension par un robot, puis de transmettre les informations nécessaires au robot avec la précision requise.
+L'objectif de ce projet est de concevoir un système de vision permettant de détecter des pièces plastiques rouges et bleues sur un convoyeur afin de permettre leur préhension par un robot.
 
 Ce document présente une première proposition d'architecture, les hypothèses retenues, les principaux risques techniques ainsi qu'une stratégie de validation adaptée au besoin.
 
-## 1. Analyse du besoin
-
-Le système de vision doit permettre de détecter des pièces plastiques rouges et bleues se déplaçant sur un convoyeur, d'estimer leur pose dans un repère exploitable par le robot, puis de transmettre ces informations de manière fiable afin de permettre leur préhension.
+## Analyse du besoin
 
 Les principales exigences identifiées sont les suivantes :
 
 ### Exigences fonctionnelles
 
-- Identifier la catégorie ou la référence de chaque pièce selon les critères de tri définis par le client. Dans le cas présent, la couleur rouge ou bleue constitue une information discriminante disponible.
+- Identifier la référence de chaque pièce selon les critères de tri définis par le client. Dans le cas présent, la couleur rouge ou bleue constitue une information discriminante disponible.
 - Estimer la pose de chaque pièce à traiter, au minimum sa position et, si nécessaire pour la préhension, son orientation.
 - Transmettre au robot la catégorie de la pièce, sa pose et les informations nécessaires à la synchronisation avec le convoyeur.
 - Permettre l’ajout ou le changement d’une référence produit avec un minimum de modification du système.
 
 ### Contraintes techniques
 
-- Les pièces sont transportées sur un convoyeur en mouvement continu.
+- La précision demandée est de ±0,1 mm.
 - Les conditions d'éclairage ambiant sont variables.
+- Les pièces sont transportées sur un convoyeur en mouvement continu.
 - Certaines pièces présentent des surfaces brillantes susceptibles de générer des reflets.
 - Le budget alloué au système de vision (caméra et éclairage) doit rester raisonnable.
-- La précision demandée est de ±0,1 mm.
 
 
-### Conséquences sur la conception
+## Points bloquants à clarifier
 
-Ces contraintes conduisent à privilégier une solution robuste vis-à-vis des variations d'éclairage, reposant sur une calibration métrique rigoureuse et une synchronisation avec le convoyeur. La précision demandée devra être considérée comme une exigence portant sur l'ensemble du système (vision, calibration, convoyeur et robot), et non uniquement sur l'algorithme de traitement d'image.
+Avant de valider l’architecture, les éléments suivants doivent être précisés :
+
+* **Précision attendue** : définir si les ±0,1 mm concernent la vision seule, la répétabilité ou l’erreur finale de préhension.
+* **Dimensions et champ de vision** : connaître les dimensions des pièces, la zone à couvrir et la distance de travail afin de dimensionner caméra et optique.
+* **Convoyeur et cadence** : confirmer la vitesse, les variations de vitesse, la cadence, la présence d’un encodeur et la capacité du robot à suivre le convoyeur.
+* **Géométrie et préhension** : vérifier que les pièces restent à plat, que leur hauteur est maîtrisée et préciser la pose ainsi que le point de prise attendus par le robot.
+* **Conditions optiques** : caractériser les reflets, le convoyeur et les possibilités de capotage, d’éclairage diffus, polarisé ou stroboscopique.
+
+Sans ces informations, la faisabilité de la précision, la robustesse de la détection et le choix du matériel ne peuvent pas être garantis.
 
 
-## 2 Hypothèses
+## Hypothèses
 
 La proposition repose sur les hypothèses suivantes:
 
@@ -63,7 +69,7 @@ Le convoyeur étant en mouvement continu, le système est synchronisé avec celu
 Les principaux composants sont les suivants :
 
 * une caméra industrielle RGB à obturateur global ;
-* un objectif adapté au champ de vision et à la précision recherchée (pour une précision de 0.1mm, 1 pixel doit typiquement correspondre à 0.05mm ou moins);
+* un objectif adapté au champ de vision et à la précision recherchée (pour une erreur finale de 0.1mm, on peut partir avec un objectif initial d'une taille physique d'un pixel correspondant à 0.05mm ou plus petit, afin de conserver une marge pour les erreurs de calibration, synchronisation et répétabilité du robot) ;
 * un éclairage LED diffus, avec possibilité d'un fonctionnement stroboscopique si les essais mettent en évidence un flou de mouvement significatif ;
 * un encodeur convoyeur permettant de suivre le déplacement des pièces entre l'acquisition et la préhension ;
 * un ordinateur industriel assurant le traitement des images et la communication avec le robot ;
@@ -96,7 +102,7 @@ L'architecture fonctionnelle est illustrée ci-dessous:
               Classification des pièces
                      │
                      ▼
-              estimation de pose des pièces
+              Estimation de pose des pièces
                      │
                      ▼
        Application de la calibration
