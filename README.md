@@ -44,7 +44,7 @@ Sans ces informations, la faisabilité de la précision, la robustesse de la dé
 La proposition repose sur les hypothèses suivantes:
 
 * les pièces sont rigides et reposent à plat sur le convoyeur ;
-* la précision de ±0,1 mm est attendue sur l'erreur finale de préhension ;
+* Pour dimensionner une architecture conservatrice, l’exigence de ±0,1 mm est provisoirement considérée comme une exigence sur la chaîne complète. Cette interprétation devra être validée avec le client, car elle implique la vision, la synchronisation, la calibration et le robot.
 * les pièces sont bien séparées et ne se chevauchent pas ;
 * chaque pièce visible peut être traitée comme une instance indépendante ;
 * les références actuelles présentent une géométrie connue et stable ;
@@ -69,7 +69,7 @@ Le convoyeur étant en mouvement continu, le système est synchronisé avec celu
 Les principaux composants sont les suivants :
 
 * une caméra industrielle RGB à obturateur global ;
-* un objectif adapté au champ de vision et à la précision recherchée, avec un échantillonnage initial visé de l’ordre de 0,05 mm/pixel ou meilleur au plan objet, à confirmer par un budget d’erreur complet ;
+* un objectif adapté au champ de vision et à la précision recherchée, avec un échantillonnage initial visé de l’ordre de 0,05 mm/pixel ou meilleur dans le plan objet. Cette valeur devra être confirmée par un budget d’erreur intégrant notamment la localisation dans l’image, les résidus de calibration, la variation de hauteur des pièces, la synchronisation avec le convoyeur et la répétabilité du robot ;
 * un éclairage LED diffus, éventuellement stroboscopique si les essais mettent en évidence un flou de mouvement significatif ;
 * un système de polarisation croisée, à évaluer pour limiter les reflets sur les pièces brillantes ;
 * un capotage opaque autour de la zone d’acquisition afin de limiter l’influence de la lumière ambiante et de garantir des conditions d’éclairage reproductibles ;
@@ -140,25 +140,21 @@ Les étapes sont les suivantes :
    
    La segmentation vise à distinguer les pièces du fond du convoyeur, puis à extraire chaque pièce comme une région indépendante. La segmentation peut s’appuyer sur un espace colorimétrique adapté, comme HSV ou Lab, puis sur des seuils pour produire un masque binaire pièce/fond. Des opérations morphologiques permettent ensuite de supprimer le bruit et de séparer les régions détectées. Une image de référence du convoyeur vide peut également être utilisée pour renforcer la détection.
    
-  voir pseudo_code/pipeline.py pour plus de détails.
-
 
 4. **Classification des pièces**
 
    Les pièces extraites sont classifiées à partir de caractéristiques colorimétriques et géométriques. Si le nombre de références ou la complexité des formes rend cette approche insuffisante, un modèle de classification supervisée pourra être envisagé, sous réserve de disposer d’un jeu de données annoté représentatif et de respecter les contraintes de cadence. L’estimation précise de la pose restera traitée séparément.
-   
-  voir pseudo_code/pipeline.py pour plus de détails.
+
 
 5. **Estimation de la pose des pièces**
 
    Pour chaque pièce isolée, le contour est extrait afin d’estimer sa géométrie. Selon la référence, le centroïde, les dimensions et une orientation principale peuvent être calculés directement. Pour une forme complexe ou lorsque ces descripteurs sont insuffisants, un matching géométrique avec un modèle de référence peut être utilisé afin d’estimer la translation et la rotation de la pièce, ainsi qu’un score de correspondance. Les éventuelles symétries doivent être prises en compte pour définir l’orientation réellement utile au robot.
    À ce stade, la pose est connue dans le repère image, puis convertie dans le repère convoyeur ou robot à l’aide des paramètres de calibration.
 
-   voir pseudo_code/pipeline.py pour plus de détails.
 
-6. **Compensation du déplacement**
+6. **Association de la pose à la position encodeur**
 
-   La position de la pièce est mise à jour à partir des informations fournies par l'encodeur du convoyeur afin de tenir compte du déplacement entre l'acquisition de l'image et la préhension.
+   L’acquisition est déclenchée matériellement, ou horodatée avec mémorisation de la valeur encodeur correspondant à l’exposition. Chaque pose est transmise avec cette position encodeur afin que le robot ou le contrôleur de suivi convoyeur puisse extrapoler la position jusqu’à l’instant de préhension.
 
 7. **Transmission au robot**
 
@@ -177,9 +173,6 @@ Les étapes sont les suivantes :
 * Ambiguïté de forme : certaines géométries peuvent rendre l’orientation difficile ou indéterminée.
 * Changement de référence mal maîtrisé : une nouvelle géométrie, couleur ou hauteur peut nécessiter une nouvelle configuration ou calibration.
 * Détection non fiable transmise au robot : une mauvaise classification ou une pose erronée peut entraîner une prise incorrecte.
-
-
-## Format des données transmises
 
 
 ## Format des données transmises
