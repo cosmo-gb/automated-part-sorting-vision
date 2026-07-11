@@ -84,6 +84,7 @@ L'architecture fonctionnelle est illustrée ci-dessous:
 
                  Convoyeur
                      │
+                     ▼
           ┌──────────┴──────────┐
           │                     │
       Encodeur              Pièces
