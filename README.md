@@ -55,7 +55,6 @@ La proposition repose sur les hypothèses suivantes:
 * la caméra est montée de manière fixe et rigide au-dessus du convoyeur ;
 * un éclairage dédié et des réglages d’acquisition fixes peuvent être utilisés ;
 * le convoyeur dispose d’un encodeur permettant de rattacher chaque détection à une position physique ;
-* Le robot peut recevoir les données nécessaires à la préhension et à la synchronisation avec le convoyeur ;
 * le changement de référence est réalisé par chargement d’une configuration contenant les paramètres de classification, le modèle géométrique et le point de préhension.
 
 
@@ -70,8 +69,8 @@ Le convoyeur étant en mouvement continu, le système est synchronisé avec celu
 Les principaux composants sont les suivants :
 
 * une caméra industrielle RGB à obturateur global ;
-* un objectif adapté au champ de vision et à la précision recherchée (pour une erreur finale de 0.1mm, on peut partir avec un objectif initial d'une taille physique d'un pixel correspondant à 0.05mm ou plus petit, afin de conserver une marge pour les erreurs de calibration, synchronisation et répétabilité du robot) ;
-* un éclairage LED diffus, avec possibilité d'un fonctionnement stroboscopique si les essais mettent en évidence un flou de mouvement significatif ;
+* un objectif adapté au champ de vision et à la précision recherchée, avec un objectif initial d’échantillonnage au plan objet de l’ordre de 0,05 mm/pixel ou meilleur, à confirmer par un budget d’erreur complet (calibration, synchronisation et répétabilité du robot) ;
+* un éclairage LED diffus, avec possibilité d'un fonctionnement stroboscopique si les essais mettent en évidence un flou de mouvement significatif, une polarisation croisée pourra être évaluée pour limiter les reflets sur les pièces brillantes ;
 * un encodeur convoyeur permettant de suivre le déplacement des pièces entre l'acquisition et la préhension ;
 * un ordinateur industriel assurant le traitement des images et la communication avec le robot ;
 * le robot de préhension.
@@ -131,7 +130,6 @@ Les étapes sont les suivantes :
 
 2. **Prétraitement et calibration**
 
-   L'image est corrigée à l'aide des paramètres de calibration de la caméra (correction de la distorsion optique). 
    L’image est corrigée de la distorsion optique à l’aide de la calibration intrinsèque de la caméra. Les coordonnées détectées sont ensuite converties du repère image vers le repère convoyeur, puis vers le repère robot, à l’aide des transformations calculées lors de l’installation.
 
 
@@ -201,7 +199,7 @@ La validation sera réalisée en deux étapes : une validation du système de vi
 
 Enfin, un test d’endurance sera réalisé sur une série suffisamment longue de pièces afin d’identifier les erreurs intermittentes, les dérives de calibration et les problèmes de synchronisation. Les seuils d’acceptation devront être définis avec le client avant la validation finale.
 
-## 7. Bonus : évolution vers des pièces plus variées
+## Bonus : évolution vers des pièces plus variées
 
 Avec des formes plus variables et des couleurs moins discriminantes, une segmentation et une classification reposant principalement sur des seuils colorimétriques deviendraient moins fiables. L’approche devrait davantage exploiter la géométrie, la texture et l’apparence globale des pièces.
 
