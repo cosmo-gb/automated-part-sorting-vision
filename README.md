@@ -59,9 +59,9 @@ La proposition repose sur les hypothèses suivantes:
 * le changement de référence est réalisé par chargement d’une configuration contenant les paramètres de classification, le modèle géométrique et le point de préhension.
 
 
-## 3. Proposition d'architecture
+## Proposition d'architecture
 
-### 3.1 Architecture matérielle
+### Architecture matérielle
 
 L'architecture proposée repose sur une caméra RGB fixe placée au-dessus du convoyeur, associée à un éclairage dédié afin de limiter l'influence des variations de lumière ambiante.
 
@@ -119,7 +119,7 @@ L'architecture fonctionnelle est illustrée ci-dessous:
 La calibration est réalisée lors de l’installation du système, puis ses paramètres sont appliqués à chaque détection.
 
 
-### 3.2 Pipeline de traitement d'image
+### Pipeline de traitement d'image
 
 Le traitement proposé repose sur une approche déterministe, adaptée à un environnement contrôlé et à des pièces de géométrie connue.
 
@@ -129,13 +129,15 @@ Les étapes sont les suivantes :
 
    Une image RGB est acquise à l'aide d'une caméra industrielle. Les paramètres d'acquisition (temps d'exposition, gain, balance des blancs) sont fixés afin de garantir des conditions d'observation reproductibles.
 
-2. **Prétraitement**
+2. **Prétraitement et calibration**
 
    L'image est corrigée à l'aide des paramètres de calibration de la caméra (correction de la distorsion optique). 
+   L’image est corrigée de la distorsion optique à l’aide de la calibration intrinsèque de la caméra. Les coordonnées détectées sont ensuite converties du repère image vers le repère convoyeur, puis vers le repère robot, à l’aide des transformations calculées lors de l’installation.
+
 
 3. **Segmentation des pièces**
-
-   Les pièces sont segmentées par rapport au convoyeur afin d'extraire chaque objet individuellement. Pour ce faire on applique des seuils pour créer un masque binaire (pièce vs background). Astuce: une image du convoyeur à vide pourra être utilisée comme comparaison.
+   
+   La segmentation vise à distinguer les pièces du fond du convoyeur, puis à extraire chaque pièce comme une région indépendante. La segmentation peut s’appuyer sur un espace colorimétrique adapté, comme HSV ou Lab, puis sur des seuils pour produire un masque binaire pièce/fond. Des opérations morphologiques permettent ensuite de supprimer le bruit et de séparer les régions détectées. Une image de référence du convoyeur vide peut également être utilisée pour renforcer la détection.
    
   voir pseudo_code/pipeline.py pour plus de détails.
 
@@ -162,7 +164,7 @@ Les étapes sont les suivantes :
    La catégorie de la pièce, sa pose et les informations nécessaires à la synchronisation sont transmises au robot.
 
 
-## 4. Risques techniques
+## Risques techniques
 
 * Précision insuffisante : l’objectif de ±0,1 mm peut être incompatible avec le champ de vision, la résolution, l’optique, la calibration ou la répétabilité du robot.
 * Flou de mouvement : le déplacement continu du convoyeur peut dégrader le contour et donc l’estimation de la pose.
@@ -176,11 +178,11 @@ Les étapes sont les suivantes :
 * Détection non fiable transmise au robot : une mauvaise classification ou une pose erronée peut entraîner une prise incorrecte.
 
 
-## 5. Format des données transmises
+## Format des données transmises
 
 Les informations issues du traitement d'image sont regroupées dans un format de données unique transmis au robot. Chaque pièce détectée est décrite par sa référence, sa pose, les informations de synchronisation avec le convoyeur et les indicateurs nécessaires à la validation de la détection. Le choix du format de sérialisation (JSON, Protobuf, etc.) dépendra du protocole de communication retenu. Un exemple de message transmis au robot est disponible dans [`docs/example_robot_message.json`](docs/example_robot_message.json).
 
-## 6. Stratégie de validation
+## Stratégie de validation
 
 La validation doit être réalisée progressivement, d’abord sur chaque fonction du système, puis sur la chaîne complète jusqu’à la préhension robotique.
 
