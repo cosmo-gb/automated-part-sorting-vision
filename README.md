@@ -61,9 +61,65 @@ La proposition repose sur les hypothèses suivantes:
 
 ## 3. Risques techniques
 
+* Précision insuffisante : l’objectif de ±0,1 mm peut être incompatible avec le champ de vision, la résolution, l’optique, la calibration ou la répétabilité du robot.
+* Flou de mouvement : le déplacement continu du convoyeur peut dégrader le contour et donc l’estimation de la pose.
+* Synchronisation imparfaite : une erreur entre l’instant d’acquisition et la prise robot peut produire un décalage important.
+* Variations d’éclairage : la lumière ambiante peut modifier l’apparence des couleurs et perturber la segmentation.
+* Reflets sur les pièces brillantes : ils peuvent créer des zones saturées, masquer le contour ou fausser la classification.
+* Erreur liée à la hauteur des pièces : une calibration 2D unique devient inexacte si les surfaces observées ne sont pas dans le même plan.
+* Instabilité mécanique : vibrations ou déplacement de la caméra peuvent invalider la calibration.
+* Ambiguïté de forme : certaines géométries peuvent rendre l’orientation difficile ou indéterminée.
+* Changement de référence mal maîtrisé : une nouvelle géométrie, couleur ou hauteur peut nécessiter une nouvelle configuration ou calibration.
+* Détection non fiable transmise au robot : une mauvaise classification ou une pose erronée peut entraîner une prise incorrecte.
+
 ## 4. Proposition d'architecture
 
 ### 4.1 Architecture matérielle
+
+L'architecture proposée repose sur une caméra RGB fixe placée au-dessus du convoyeur, associée à un éclairage dédié afin de limiter l'influence des variations de lumière ambiante.
+
+Le convoyeur étant en mouvement continu, le système est synchronisé avec celui-ci afin de pouvoir relier chaque détection à une position physique de la pièce. Une calibration permet ensuite de convertir les coordonnées image dans un repère exploitable par le robot.
+
+Les principaux composants sont les suivants :
+
+* une caméra industrielle RGB à obturateur global ;
+* un objectif adapté au champ de vision et à la précision recherchée ;
+* un éclairage LED diffus, avec possibilité d'un fonctionnement stroboscopique si les essais mettent en évidence un flou de mouvement significatif ;
+* un encodeur convoyeur permettant de suivre le déplacement des pièces entre l'acquisition et la préhension ;
+* un ordinateur industriel assurant le traitement des images et la communication avec le robot ;
+* le robot de préhension.
+
+L'architecture fonctionnelle est illustrée ci-dessous.
+
+```text
+                 Convoyeur
+                     │
+          ┌──────────┴──────────┐
+          │                     │
+      Encodeur              Pièces
+          │                     │
+          └──────────┬──────────┘
+                     │
+               Déclenchement
+                     │
+                     ▼
+         Caméra + Éclairage LED
+                     │
+                     ▼
+         Traitement d'image
+                     │
+                     ▼
+       Calibration et estimation
+              de la pose
+                     │
+                     ▼
+      Compensation du déplacement
+            du convoyeur
+                     │
+                     ▼
+          Communication robot
+```
+
 
 ### 4.2 Pipeline de traitement d'image
 
@@ -162,8 +218,6 @@ La proposition repose sur les hypothèses suivantes:
 
 * Quel taux de réussite de préhension est attendu ?
 * Quel taux de mauvaise classification est acceptable ?
-* Quel comportement est attendu en cas de doute ou d’erreur ?
 * Combien d’échantillons seront disponibles pour le développement et la validation ?
 * Les variations entre lots de fabrication doivent-elles être prises en compte ?
 * Qui sera chargé d’ajouter une nouvelle référence produit ?
-* Quels outils de diagnostic et de traçabilité sont nécessaires ?
